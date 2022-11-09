@@ -35,6 +35,36 @@
   </style>
 
 <script>
+    // in this program we're going to dynamically update the text shadow of the h1 element depending on the position of the mouse.
+    const hero = document.querySelector('.hero');
+    const text = hero.querySelector('h1');
+    // now we figure out how far the text hadow should go. How many pixels should it stretch.
+    const walk = 100;
+
+// when we're dealing with events we can use offsetX and offsetY to get your cursor's position. BUT if you have nested elements you'll need to do a little math to get the position of the cursor relative to the parent element.
+    function shadow(e) {
+        // we use offset here because it gives us the position of the mouse relative to the element itself.
+        // We're listening for the mousemove event on hero. If hero had children, we would have to listen for the event on each child. It will give us the location of the mouse relative to the child element.
+        const { offsetWidth: width, offsetHeight: height } = hero;
+        let { offsetX: x, offsetY: y } = e;
+
+        // if the two things are not the same. We're figuring out, if someone hovers in the top left hand corner of 'woah' we're going to add the offset of the mouse to the offset of the hero.
+        if(this !== e.target) {
+            x = x + e.target.offsetLeft;
+            y = y + e.target.offsetTop;
+        }
+        const xWalk = Math.round((x / width * walk) - (walk / 2));
+        const yWalk = Math.round((y / height * walk) - (walk / 2));
+
+        text.style.textShadow = `
+        ${xWalk}px ${yWalk}px 0 rgba(255,0,255,0.7),
+        ${xWalk * -1}px ${yWalk}px 0 rgba(0,255,255,0.7),
+        ${yWalk}px ${xWalk * -1}px 0 rgba(0,255,0,0.7),
+        ${yWalk * -1}px ${xWalk}px 0 rgba(0,0,255,0.7)
+        `;
+    }
+// we add an event listener to the hero element and listen for the mousemove event. When the mouse moves, we call the shadow function. The mousemove event tracks screen x and y coordinates as well as the x and y coordinates of the mouse relative to the element that the event is attached to. <-- This is quite amazing.
+    hero.addEventListener('mousemove', shadow);
 </script>
 </body>
 </html>
